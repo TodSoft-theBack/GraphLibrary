@@ -1,0 +1,15 @@
+D:\Coding\C#\Help Projects\GraphLibrary\bin\Debug\net7.0\GraphLibrary.exe
+D:\Coding\C#\Help Projects\GraphLibrary\bin\Debug\net7.0\GraphLibrary.deps.json
+D:\Coding\C#\Help Projects\GraphLibrary\bin\Debug\net7.0\GraphLibrary.runtimeconfig.json
+D:\Coding\C#\Help Projects\GraphLibrary\bin\Debug\net7.0\GraphLibrary.dll
+D:\Coding\C#\Help Projects\GraphLibrary\bin\Debug\net7.0\GraphLibrary.pdb
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.csproj.AssemblyReference.cache
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.AssemblyInfoInputs.cache
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.AssemblyInfo.cs
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.csproj.CoreCompileInputs.cache
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.dll
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\refint\GraphLibrary.dll
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.pdb
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\GraphLibrary.genruntimeconfig.cache
+D:\Coding\C#\Help Projects\GraphLibrary\obj\Debug\net7.0\ref\GraphLibrary.dll
