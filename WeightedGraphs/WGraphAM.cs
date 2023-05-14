@@ -71,6 +71,18 @@ namespace GraphLibrary
         {
             return false;
         }
+        public List<int> GetNeighbours(int vertex)
+        {
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            if (AdjacencyMatrix == null)
+                throw new Exception("The adjacency matrix was null!!!");
+            var neighbours = new List<int>();
+            for (int i = 0; i < Verteces.Count; i++)
+                if (AdjacencyMatrix[vertex, i] != 0)
+                        neighbours.Add(i);
+            return neighbours;
+        }
 
         public ITree<T> BreadthTraverse(T? root)
         {

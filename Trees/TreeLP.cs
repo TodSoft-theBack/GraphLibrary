@@ -16,6 +16,16 @@ namespace GraphLibrary
             ListOfParents[VertexIndeces[Root]] = ROOT_STATE;
         }
 
+        public void AddVertex(T vertex, T parent)
+        {
+            if (VertexIndeces == null)
+                throw new Exception("Verteces dictionary was null!!!");
+            if (!Has_Vertex(parent))
+                throw new Exception("Invalid parent index!!!");
+            Add_Vertex(vertex);
+            ListOfParents[VertexIndeces[vertex]] = VertexIndeces[parent];
+        }
+
         public override string ToString()
         {
             return "";

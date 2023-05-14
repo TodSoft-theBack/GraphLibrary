@@ -65,7 +65,8 @@ namespace GraphLibrary
         {
             return false;
         }
-
+        public List<int> GetNeighbours(int vertex)
+            => ListOfNeighbours[vertex].Select(neighbour => neighbour.vertexIndex).ToList();
         public ITree<T> BreadthTraverse(T? root)
         {
             if (Verteces == null)
