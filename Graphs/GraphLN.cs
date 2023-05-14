@@ -1,43 +1,43 @@
 namespace GraphLibrary
 {
-    internal class WGraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
+    internal class GraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
     {
-        protected List<List<(int vertexIndex, int weigth)>> ListOfNeighbours { get; set; }
-        public WGraphLN() 
+        protected List<List<int>> ListOfNeighbours { get; set; }
+        public GraphLN() 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+            ListOfNeighbours = new List<List<int>>();
         }
 
-        public WGraphLN(WGraphLN<T> graph) 
+        public GraphLN(GraphLN<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+            ListOfNeighbours = new List<List<int>>();
         }
 
-        public WGraphLN(WGraphAM<T> graph) 
+        public GraphLN(GraphAM<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+            ListOfNeighbours = new List<List<int>>();
         }
 
-        public WGraphLN(WGraphLE<T> graph) 
+        public GraphLN(GraphLE<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+            ListOfNeighbours = new List<List<int>>();
         }
 
         
-        public WGraphLN(List<List<(int vertexIndex, int weigth)>> listOfNeighbours) : this()
+        public GraphLN(List<List<int>> listOfNeighbours) : this()
         {
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>(listOfNeighbours);
+            ListOfNeighbours = new List<List<int>>(listOfNeighbours);
         }
 
-        public WGraphLN(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges) : this()
+        public GraphLN(List<(int vertexFrom, int vertexTo)> listOfEdges) : this()
         {
 
         }
@@ -65,8 +65,7 @@ namespace GraphLibrary
         {
             return false;
         }
-        public List<int> GetNeighbours(int vertex)
-            => ListOfNeighbours[vertex].Select(neighbour => neighbour.vertexIndex).ToList();
+        public List<int> GetNeighbours(int vertex) => ListOfNeighbours[vertex];
         public ITree<T> BreadthTraverse(T? root)
         {
             if (Verteces == null)

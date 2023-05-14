@@ -1,48 +1,54 @@
 namespace GraphLibrary
 {
-    internal class WGraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
+    internal class GraphAM <T>: Graph<T>, IWGraph<T> where T : notnull
     {
-        protected List<List<(int vertexIndex, int weigth)>> ListOfNeighbours { get; set; }
-        public WGraphLN() 
+        protected int[,]? AdjacencyMatrix { get; set; }
+        public GraphAM() 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
-        public WGraphLN(WGraphLN<T> graph) 
+        public GraphAM(GraphLN<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
-        public WGraphLN(WGraphAM<T> graph) 
+        public GraphAM(GraphAM<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
-        public WGraphLN(WGraphLE<T> graph) 
+        public GraphAM(GraphLE<T> graph) 
         {
             Verteces = new List<T>();
             VertexIndeces = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
+        public GraphAM(int[,] adjacencyMatrix)
+        {
+            Verteces = new List<T>();
+            VertexIndeces = new Dictionary<T, int>();
+
+            AdjacencyMatrix = new int[adjacencyMatrix.GetLength(0), adjacencyMatrix.GetLength(1)];
+
+            for (int i = 0; i < adjacencyMatrix.GetLength(0); i++)
+                for (int j = 0; j < adjacencyMatrix.GetLength(1); j++)
+                    AdjacencyMatrix[i,j] = adjacencyMatrix[i,j];
+        }
+
+        public GraphAM(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges)
+        {
+            Verteces = new List<T>();
+            VertexIndeces = new Dictionary<T, int>();
+        }
         
-        public WGraphLN(List<List<(int vertexIndex, int weigth)>> listOfNeighbours) : this()
+        public void AddVertex(T vertex)
         {
-            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>(listOfNeighbours);
+            this.Add_Vertex(vertex);
         }
-
-        public WGraphLN(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges) : this()
-        {
-
-        }
-        
-        public void AddVertex(T vertex) => this.Add_Vertex(vertex);
 
         public void AddEdge(T from, T to, int weight)
         {
@@ -66,7 +72,18 @@ namespace GraphLibrary
             return false;
         }
         public List<int> GetNeighbours(int vertex)
-            => ListOfNeighbours[vertex].Select(neighbour => neighbour.vertexIndex).ToList();
+        {
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            if (AdjacencyMatrix == null)
+                throw new Exception("The adjacency matrix was null!!!");
+            var neighbours = new List<int>();
+            for (int i = 0; i < Verteces.Count; i++)
+                if (AdjacencyMatrix[vertex, i] != 0)
+                        neighbours.Add(i);
+            return neighbours;
+        }
+
         public ITree<T> BreadthTraverse(T? root)
         {
             if (Verteces == null)
@@ -90,7 +107,7 @@ namespace GraphLibrary
 
         public override string ToString()
         {
-            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tWeighted list of neighbours:\n";
+            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tWeighted adjacency matrix:\n";
             return result;
         }
     }

@@ -100,7 +100,7 @@ namespace GraphLibrary
                 throw new Exception("Root cannot be null!!!");
             return new TreeLP<T>(root, Verteces.Count);
         }
-        public void ShortestDistance(T root, ref List<int> weigths, ref ITree<T> paths)
+        public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
             
         }

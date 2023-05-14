@@ -8,6 +8,6 @@ namespace GraphLibrary
         public List<int> GetNeighbours(int vertex);
         public ITree<T> BreadthTraverse(T root);
         public ITree<T> DepthTraverse(T root);
-        public void ShortestDistance(T root, ref List<int> weigths, ref ITree<T> paths);
+        public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths);
     }
 }

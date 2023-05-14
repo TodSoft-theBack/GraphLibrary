@@ -127,7 +127,7 @@ namespace GraphLibrary
 
             return tree;
         }
-        public void ShortestDistance(T root, ref List<int> weigths, ref ITree<T> paths)
+        public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
 
         }
