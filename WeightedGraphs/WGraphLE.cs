@@ -78,6 +78,14 @@ namespace GraphLibrary
 
             return neighbours;
         }
+
+        public override string ToString()
+        {
+            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tList of edges:\n";
+            foreach (var edge  in ListOfEdges)
+                result+= $"({}, {}) -> {}\n";
+            return result;
+        }
     }
 }
 

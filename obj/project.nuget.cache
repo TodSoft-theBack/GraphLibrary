@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "csq2EMyAaXbgsrckg3quwoWhTGr4lezkd49JcYHbg4+f3pUi7q47QE/ca7hZbCw25LD3ZVWtvh/rBU8oYQecxg==",
+  "dgSpecHash": "bwFcD8uxhFIQQstS2jfaX7gx1Kz7/ALoRGsK7RiObNeGSSYOxYG9efddYq3mB+12UasMp+xYP5/NwI/91LWrKw==",
   "success": true,
-  "projectFilePath": "D:\\Coding\\C#\\Help Projects\\GraphLibrary\\GraphLibrary.csproj",
+  "projectFilePath": "/workspaces/GraphLibrary/GraphLibrary.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
