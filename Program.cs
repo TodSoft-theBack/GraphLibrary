@@ -6,20 +6,19 @@ namespace GraphLibrary
     {
         public static void Main(string[] args)
         {
-            List<(uint firstVertex, uint secondVertex)> listOfEdges = new List<(uint firstVertex, uint secondVertex)>();
             Console.WriteLine("Starting graph reader...\n");
 
             Console.Write("Enter an edge: ");
             string? line = Console.ReadLine()?.Trim();
+            IGraph<char> graph = new GraphLE<char>();
             while (!string.IsNullOrEmpty(line) && line != "\n")
             {
-                uint[] numbers = line.Split().Select(uint.Parse).ToArray();
-                listOfEdges.Add((numbers[0], numbers[1]));
+                char[] verteces = line.Split().Select(str => str[0]).ToArray();
+                graph.AddEdge(verteces[0], verteces[1]);
                 Console.Write("Enter an edge: ");
                 line = Console.ReadLine()?.Trim();
             }
-
-            IGraph<int> graph = new GraphLE<int>(listOfEdges);
+            
             Console.WriteLine("\nClosing graph reader...");
         }
     }

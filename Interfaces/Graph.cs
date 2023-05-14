@@ -3,7 +3,7 @@ namespace GraphLibrary
     internal abstract class Graph<T> where T : notnull
     {
         protected List<T>? Verteces {get; set;}
-        protected Dictionary<T, uint>? VertexIndeces {get; set;}
+        protected Dictionary<T, int>? VertexIndeces {get; set;}
 
         public void Add_Vertex(T vertex)
         {
@@ -16,7 +16,7 @@ namespace GraphLibrary
             if (vertex == null)
                 throw new Exception("Vertex cannot be null!!!");
             Verteces.Add(vertex);
-            VertexIndeces.Add(vertex, (uint)(Verteces.Count - 1));
+            VertexIndeces.Add(vertex, Verteces.Count - 1);
         }
         public void Remove_Vertex(T vertex)
         {

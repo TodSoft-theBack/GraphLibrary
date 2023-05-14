@@ -1,18 +1,18 @@
 namespace GraphLibrary
 {
-    internal class WGraphAM <T>: Graph<T>, IGraph<T> where T : notnull
+    internal class WGraphAM <T>: Graph<T>, IWGraph<T> where T : notnull
     {
-        protected uint[,]? AdjacencyMatrix { get; set; }
+        protected int[,]? AdjacencyMatrix { get; set; }
         public WGraphAM() 
         {
             Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, uint>();
+            VertexIndeces = new Dictionary<T, int>();
         }
 
-        public WGraphAM(List<((uint vertexFrom, uint vertexTo), int weight)> listOfEdges)
+        public WGraphAM(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges)
         {
             Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, uint>();
+            VertexIndeces = new Dictionary<T, int>();
         }
         
         public void AddVertex(T vertex)
@@ -20,7 +20,7 @@ namespace GraphLibrary
             this.Add_Vertex(vertex);
         }
 
-        public void AddEdge(T source, T destination)
+        public void AddEdge(T from, T to, int weight)
         {
 
         }
@@ -30,14 +30,14 @@ namespace GraphLibrary
             this.Remove_Vertex(vertex);
         }
 
-        public void RemoveEdge(T source, T destination)
+        public void RemoveEdge(T from, T to)
         {
 
         }
 
         public bool HasVertex(T vertex) => this.Has_Vertex(vertex);
 
-        public bool HasEdge(T source, T destination)
+        public bool HasEdge(T from, T to)
         {
             return false;
         }
