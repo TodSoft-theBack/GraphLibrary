@@ -57,25 +57,35 @@ namespace GraphLibrary
             return index != -1;
         }
 
-        public List<T>? GetVertices() => this.Get_Vertices();
-
-        public List<T>? GetNeighbors(T vertex)
+        public ITree<T> BreadthTraverse(T? root)
         {
-            if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
             if (Verteces == null)
                 throw new Exception("Verteces collection was null!!!");
+            if (root == null)
+                throw new Exception("Root cannot be null!!!");
+            return new TreeLP<T>(root, Verteces.Count);
+        }
 
-            List<T> neighbours = new List<T>();
-            int vertexIndex = VertexIndeces[vertex];
+        public ITree<T> DepthTraverse(T? root)
+        {
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            if (root == null)
+                throw new Exception("Root cannot be null!!!");
+            return new TreeLP<T>(root, Verteces.Count);
+        }
 
-            foreach (var edge in ListOfEdges)
-                if (edge.vertexFrom == vertexIndex)
-                    neighbours.Add(Verteces[edge.vertexTo]);
-                else if (edge.vertexTo == vertexIndex)
-                    neighbours.Add(Verteces[edge.vertexFrom]);
-
-            return neighbours;
+        public void ShortestDistance(T root, ref List<int> weigths, ref ITree<T> paths)
+        {
+            
+        }
+        
+        public override string ToString()
+        {
+            string result = $"{new string('-', 10)}Oriented graph{new string('-', 10)}\n\tList of edges:\n";
+            foreach (var edge  in ListOfEdges)
+                result+= $"({edge.vertexFrom}, {edge.vertexFrom})\n";
+            return result;
         }
     }
 }

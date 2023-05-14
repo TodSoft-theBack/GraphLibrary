@@ -10,6 +10,33 @@ namespace GraphLibrary
             ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
+        public WGraphLN(WGraphLN<T> graph) 
+        {
+            Verteces = new List<T>();
+            VertexIndeces = new Dictionary<T, int>();
+            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+        }
+
+        public WGraphLN(WGraphAM<T> graph) 
+        {
+            Verteces = new List<T>();
+            VertexIndeces = new Dictionary<T, int>();
+            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+        }
+
+        public WGraphLN(WGraphLE<T> graph) 
+        {
+            Verteces = new List<T>();
+            VertexIndeces = new Dictionary<T, int>();
+            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
+        }
+
+        
+        public WGraphLN(List<List<(int vertexIndex, int weigth)>> listOfNeighbours) : this()
+        {
+            ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>(listOfNeighbours);
+        }
+
         public WGraphLN(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges) : this()
         {
 
@@ -39,11 +66,31 @@ namespace GraphLibrary
             return false;
         }
 
-        public List<T>? GetVertices() => this.Get_Vertices();
-
-        public List<T>? GetNeighbors(T vertex)
+        public ITree<T> BreadthTraverse(T? root)
         {
-            return new List<T>();
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            if (root == null)
+                throw new Exception("Root cannot be null!!!");
+            return new TreeLP<T>(root, Verteces.Count);
+        }
+        public ITree<T> DepthTraverse(T? root)
+        {
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            if (root == null)
+                throw new Exception("Root cannot be null!!!");
+            return new TreeLP<T>(root, Verteces.Count);
+        }
+        public void ShortestDistance(T root, ref List<int> weigths, ref ITree<T> paths)
+        {
+            
+        }
+
+        public override string ToString()
+        {
+            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tWeighted list of neighbours:\n";
+            return result;
         }
     }
 }
