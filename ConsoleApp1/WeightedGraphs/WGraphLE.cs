@@ -2,6 +2,7 @@ namespace GraphLibrary
 {
     internal class WGraphLE<T> : Graph<T>, IWGraph<T> where T : notnull
     {
+        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
         public List<((int vertexFrom, int vertexTo) vertices, int weight)> ListOfEdges { get; set; }
 
         public WGraphLE() 

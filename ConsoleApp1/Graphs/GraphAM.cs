@@ -2,6 +2,7 @@ namespace GraphLibrary
 {
     internal class GraphAM <T>: Graph<T>, IWGraph<T> where T : notnull
     {
+        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
         protected int[,]? AdjacencyMatrix { get; set; }
         public GraphAM() 
         {

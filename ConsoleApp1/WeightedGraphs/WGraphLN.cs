@@ -2,6 +2,7 @@ namespace GraphLibrary
 {
     internal class WGraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
     {
+        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
         protected List<List<(int vertexIndex, int weight)>> ListOfNeighbours { get; set; }
         public WGraphLN() 
         {

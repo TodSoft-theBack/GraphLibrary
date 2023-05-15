@@ -2,9 +2,31 @@ namespace GraphLibrary
 {
     internal class GraphLE<T> : Graph<T>, IGraph<T> where T : notnull
     {
+        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
         public List<(int vertexFrom, int vertexTo)> ListOfEdges { get; set; }
 
         public GraphLE() 
+        {
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
+            ListOfEdges = new List<(int vertexFrom, int vertexTo)>();
+        }
+
+        public GraphLE(GraphAM<T> graph)
+        {
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
+            ListOfEdges = new List<(int vertexFrom, int vertexTo)>();
+        }
+
+        public GraphLE(GraphLE<T> graph)
+        {
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
+            ListOfEdges = new List<(int vertexFrom, int vertexTo)>(graph.ListOfEdges);
+        }
+
+        public GraphLE(GraphLN<T> graph)
         {
             Vertices = new List<T>();
             VertexIndices = new Dictionary<T, int>();
@@ -32,10 +54,7 @@ namespace GraphLibrary
             ListOfEdges.Add((VertexIndices[from], VertexIndices[to]));
         }
 
-        public void RemoveVertex(T vertex)
-        {
-            this.Remove_Vertex(vertex);
-        }
+        public void RemoveVertex(T vertex) => this.Remove_Vertex(vertex);
 
         public void RemoveEdge(T from, T to)
         {
@@ -71,16 +90,15 @@ namespace GraphLibrary
         public ITree<T> BreadthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
             bool[] visited = new bool[Vertices.Count];
             Queue<int> queue = new Queue<int>();
-            queue.Enqueue(VertexIndices[root]);
-            var previousVertex = -1;
+            queue.Enqueue(VertexIndices[root]);     
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
@@ -95,7 +113,6 @@ namespace GraphLibrary
                         tree.AddVertex(Vertices[vertex], Vertices[currentVertex]);
                     visited[currentVertex] = true;
                 }
-                previousVertex = currentVertex;
             }
             return tree;
         }
@@ -146,7 +163,6 @@ namespace GraphLibrary
             bool[] visited = new bool[Vertices.Count];
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(VertexIndices[from]);
-            var previousVertex = -1;
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
@@ -161,7 +177,6 @@ namespace GraphLibrary
 
                     visited[currentVertex] = true;
                 }
-                previousVertex = currentVertex;
             }
             return false;
         }
@@ -202,13 +217,15 @@ namespace GraphLibrary
                 throw new Exception("vertices dictionary was null!!!");
             if (Vertices == null)
                 throw new Exception("vertices collection was null!!!");
-            if (root == null || !HasVertex(root))
-                throw new Exception("Root must be within the graph!!!");
-            bool[] visited = new bool[Vertices.Count];
+            if (root == null)
+                throw new Exception("Root cannot be null!!!");
             paths = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(VertexIndices[root]);
-            var previousVertex = -1;
+            for (int i = 0; i < Vertices.Count; i++)
+                weigths[Vertices[i]] = -1;
+            weigths[root] = 0;
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
@@ -219,9 +236,13 @@ namespace GraphLibrary
                     foreach (var vertex in adjecentvertices)
                         queue.Enqueue(vertex);
 
+                    foreach (var vertex in adjecentvertices)
+                    {
+                        weigths[Vertices[vertex]] = 1 + weigths[Vertices[currentVertex]];
+                        paths.AddVertex(Vertices[vertex], Vertices[currentVertex]);
+                    }
                     visited[currentVertex] = true;
                 }
-                previousVertex = currentVertex;
             }
         }
         
