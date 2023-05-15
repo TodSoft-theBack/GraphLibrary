@@ -2,32 +2,32 @@ namespace GraphLibrary
 {
     internal class WGraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
     {
-        protected List<List<(int vertexIndex, int weigth)>> ListOfNeighbours { get; set; }
+        protected List<List<(int vertexIndex, int weight)>> ListOfNeighbours { get; set; }
         public WGraphLN() 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
             ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
         public WGraphLN(WGraphLN<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
             ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
         public WGraphLN(WGraphAM<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
             ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
         public WGraphLN(WGraphLE<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
             ListOfNeighbours = new List<List<(int vertexIndex, int weigth)>>();
         }
 
@@ -70,29 +70,29 @@ namespace GraphLibrary
             => ListOfNeighbours[vertex].Select(neighbour => neighbour.vertexIndex).ToList();
         public ITree<T> BreadthTraverse(T? root)
         {
-            if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
-            bool[] visited = new bool[Verteces.Count];
+            ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
             Queue<int> queue = new Queue<int>();
-            queue.Enqueue(VertexIndeces[root]);
+            queue.Enqueue(VertexIndices[root]);
             var previousVertex = -1;
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
                 if (!visited[currentVertex])
                 {
-                    var adjecentVerteces = GetNeighbours(currentVertex);
+                    var adjecentvertices = GetNeighbours(currentVertex);
 
-                    foreach (var vertex in adjecentVerteces)
+                    foreach (var vertex in adjecentvertices)
                         queue.Enqueue(vertex);
 
-                    foreach (var vertex in adjecentVerteces)
-                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
+                    foreach (var vertex in adjecentvertices)
+                        tree.AddVertex(Vertices[vertex], Vertices[currentVertex]);
                     visited[currentVertex] = true;
                 }
                 previousVertex = currentVertex;
@@ -102,39 +102,155 @@ namespace GraphLibrary
 
         public ITree<T> DepthTraverse(T? root)
         {
-            if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
-            bool[] visited = new bool[Verteces.Count];
-            visited[VertexIndeces[root]] = true;
+            ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
-            foreach (var neighbour in GetNeighbours(VertexIndeces[root]))
-                stack.Push(neighbour);
-            
+            stack.Push(VertexIndices[root]);
+            var previousVertex = -1;
             while (stack.Count > 0)
             {
                 var currentVertex = stack.Pop();
-                if (!visited[currentVertex])
-                {
-                    var adjecentVerteces = GetNeighbours(currentVertex);
 
-                    foreach (var vertex in adjecentVerteces)
-                        stack.Push(vertex);
+                if (visited[currentVertex])
+                    continue;
+                
+                var adjecentvertices = GetNeighbours(currentVertex).Where(v => !visited[v]).ToList();
+                visited[currentVertex] = true;
 
-                    visited[currentVertex] = true;
-                }
+                foreach (var vertex in adjecentvertices)
+                    stack.Push(vertex);
+
+                if (previousVertex != -1)
+                    tree.AddVertex(Vertices[currentVertex], Vertices[previousVertex]);
+
+                previousVertex = currentVertex;  
             }
             return tree;
         }
 
+        public bool BreadthSearch(T from, T to)
+        {
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+            bool[] visited = new bool[Vertices.Count];
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(VertexIndices[from]);
+            var previousVertex = -1;
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Dequeue();
+                if (currentVertex == VertexIndices[to])
+                    return true;
+                if (!visited[currentVertex])
+                {
+                    var adjecentvertices = GetNeighbours(currentVertex);
+
+                    foreach (var vertex in adjecentvertices)
+                        queue.Enqueue(vertex);
+
+                    visited[currentVertex] = true;
+                }
+                previousVertex = currentVertex;
+            }
+            return false;
+        }
+
+        public bool DepthSearch(T from, T to)
+        {
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+                if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            bool[] visited = new bool[Vertices.Count];
+
+            Stack<int> stack = new Stack<int>();
+            stack.Push(VertexIndices[from]);
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                if (currentVertex == VertexIndices[to])
+                    return true;
+
+                if (visited[currentVertex])
+                    continue;
+                
+                var adjecentvertices = GetNeighbours(currentVertex).Where(v => !visited[v]).ToList();
+                visited[currentVertex] = true;
+
+                foreach (var vertex in adjecentvertices)
+                    stack.Push(vertex);
+            }
+            return false;
+        }
+
+        private int minDistance(Dictionary<T, int> weights, bool[] visited)
+        {
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+
+            int min = int.MaxValue, min_index = -1;
+            for (int v = 0; v < Vertices.Count; v++)
+                if (visited[v] == false && weights[Vertices[v]] <= min) 
+                {
+                    min = weights[Vertices[v]];
+                    min_index = v;
+                }
+    
+            return min_index;
+        }
+
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
-            
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            weigths = new Dictionary<T, int>();
+            paths = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
+            for (int i = 0; i < Vertices.Count; i++) 
+            {
+                weigths[Vertices[i]] = int.MaxValue; // Ideally it must be infinity
+                visited[i] = false;
+            }
+
+            weigths[root] = 0;
+
+            for (int count = 0; count < Vertices.Count; count++) 
+            {
+                int u = minDistance(weigths, visited);
+                
+                visited[u] = true;
+    
+                for (int v = 0; v < Vertices.Count; v++)
+                {
+                    var current = ListOfNeighbours[u].Where( edge => edge.vertexIndex == v).ToList();
+                    var currentWeight = int.MaxValue;
+
+                    if (current.Count != 0)
+                        currentWeight = current.FirstOrDefault().weight;
+                    
+                    if (visited[v])
+                        continue;
+
+                    if (currentWeight == 0 || weigths[Vertices[u]] == int.MaxValue)
+                        continue;
+
+                    if(weigths[Vertices[u]] + currentWeight < weigths[Vertices[v]])
+                        weigths[Vertices[v]] = weigths[Vertices[u]] + currentWeight;
+                }
+            }
         }
 
         public override string ToString()

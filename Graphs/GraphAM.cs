@@ -5,32 +5,32 @@ namespace GraphLibrary
         protected int[,]? AdjacencyMatrix { get; set; }
         public GraphAM() 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
         }
 
         public GraphAM(GraphLN<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
         }
 
         public GraphAM(GraphAM<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
         }
 
         public GraphAM(GraphLE<T> graph) 
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
         }
 
         public GraphAM(int[,] adjacencyMatrix)
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
 
             AdjacencyMatrix = new int[adjacencyMatrix.GetLength(0), adjacencyMatrix.GetLength(1)];
 
@@ -41,8 +41,8 @@ namespace GraphLibrary
 
         public GraphAM(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges)
         {
-            Verteces = new List<T>();
-            VertexIndeces = new Dictionary<T, int>();
+            Vertices = new List<T>();
+            VertexIndices = new Dictionary<T, int>();
         }
         
         public void AddVertex(T vertex)
@@ -73,12 +73,12 @@ namespace GraphLibrary
         }
         public List<int> GetNeighbours(int vertex)
         {
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
             if (AdjacencyMatrix == null)
                 throw new Exception("The adjacency matrix was null!!!");
             var neighbours = new List<int>();
-            for (int i = 0; i < Verteces.Count; i++)
+            for (int i = 0; i < Vertices.Count; i++)
                 if (AdjacencyMatrix[vertex, i] != 0)
                         neighbours.Add(i);
             return neighbours;
@@ -86,29 +86,29 @@ namespace GraphLibrary
 
         public ITree<T> BreadthTraverse(T? root)
         {
-            if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
-            bool[] visited = new bool[Verteces.Count];
+            ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
             Queue<int> queue = new Queue<int>();
-            queue.Enqueue(VertexIndeces[root]);
+            queue.Enqueue(VertexIndices[root]);
             var previousVertex = -1;
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
                 if (!visited[currentVertex])
                 {
-                    var adjecentVerteces = GetNeighbours(currentVertex);
+                    var adjecentvertices = GetNeighbours(currentVertex);
 
-                    foreach (var vertex in adjecentVerteces)
+                    foreach (var vertex in adjecentvertices)
                         queue.Enqueue(vertex);
 
-                    foreach (var vertex in adjecentVerteces)
-                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
+                    foreach (var vertex in adjecentvertices)
+                        tree.AddVertex(Vertices[vertex], Vertices[currentVertex]);
                     visited[currentVertex] = true;
                 }
                 previousVertex = currentVertex;
@@ -118,34 +118,98 @@ namespace GraphLibrary
 
         public ITree<T> DepthTraverse(T? root)
         {
-            if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
-            bool[] visited = new bool[Verteces.Count];
-            visited[VertexIndeces[root]] = true;
+            ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
+            bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
-            foreach (var neighbour in GetNeighbours(VertexIndeces[root]))
-                stack.Push(neighbour);
-            
+            stack.Push(VertexIndices[root]);
+            var previousVertex = -1;
             while (stack.Count > 0)
             {
                 var currentVertex = stack.Pop();
+
+                if (visited[currentVertex])
+                    continue;
+                
+                var adjecentvertices = GetNeighbours(currentVertex).Where(v => !visited[v]).ToList();
+                visited[currentVertex] = true;
+
+                foreach (var vertex in adjecentvertices)
+                    stack.Push(vertex);
+
+                if (previousVertex != -1)
+                    tree.AddVertex(Vertices[currentVertex], Vertices[previousVertex]);
+
+                previousVertex = currentVertex;  
+            }
+            return tree;
+        }
+
+public bool BreadthSearch(T from, T to)
+        {
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+            bool[] visited = new bool[Vertices.Count];
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(VertexIndices[from]);
+            var previousVertex = -1;
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Dequeue();
+                if (currentVertex == VertexIndices[to])
+                    return true;
                 if (!visited[currentVertex])
                 {
-                    var adjecentVerteces = GetNeighbours(currentVertex);
+                    var adjecentvertices = GetNeighbours(currentVertex);
 
-                    foreach (var vertex in adjecentVerteces)
-                        stack.Push(vertex);
+                    foreach (var vertex in adjecentvertices)
+                        queue.Enqueue(vertex);
 
                     visited[currentVertex] = true;
                 }
+                previousVertex = currentVertex;
             }
-            return tree;
+            return false;
+        }
+
+        public bool DepthSearch(T from, T to)
+        {
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+                if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            bool[] visited = new bool[Vertices.Count];
+
+            Stack<int> stack = new Stack<int>();
+            stack.Push(VertexIndices[from]);
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                if (currentVertex == VertexIndices[to])
+                    return true;
+
+                if (visited[currentVertex])
+                    continue;
+                
+                var adjecentvertices = GetNeighbours(currentVertex).Where(v => !visited[v]).ToList();
+                visited[currentVertex] = true;
+
+                foreach (var vertex in adjecentvertices)
+                    stack.Push(vertex);
+            }
+            return false;
         }
 
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)

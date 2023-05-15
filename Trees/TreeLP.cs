@@ -10,7 +10,7 @@ namespace GraphLibrary
 
         public TreeLP(T root, int capacity)
         {
-            Verteces = new List<T>(capacity);
+            vertices = new List<T>(capacity);
             VertexIndeces = new Dictionary<T, int>(capacity);
             ListOfParents = new int[capacity];
             Root = root;
@@ -21,7 +21,7 @@ namespace GraphLibrary
         public void AddVertex(T vertex, T parent)
         {
             if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
+                throw new Exception("vertices dictionary was null!!!");
             if (!Has_Vertex(parent))
                 throw new Exception("Invalid parent index!!!");
             if (Has_Vertex(vertex))
@@ -30,7 +30,7 @@ namespace GraphLibrary
             ListOfParents[VertexIndeces[vertex]] = VertexIndeces[parent];
         }
 
-        private List<int> GetConnections(int vertex)
+        public List<int> GetChildren(int vertex)
         {
             var connected = new List<int>();
             for (int i = 0; i < ListOfParents.Length; i++)
@@ -41,13 +41,13 @@ namespace GraphLibrary
 
         private string toString(int vertex)
         {
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
+            if (vertices == null)
+                throw new Exception("vertices collection was null!!!");
             StringBuilder builder = new StringBuilder();
-            var connected = GetConnections(vertex);
+            var connected = GetChildren(vertex);
             if (connected.Count == 0 || connected == null)
-                return $"{Verteces[vertex]} -> \n";
-            builder.Append($"{Verteces[vertex]} -> {string.Join(", ", connected.Select(v => Verteces[v]))}\n");
+                return $"{vertices[vertex]} -> \n";
+            builder.Append($"{vertices[vertex]} -> {string.Join(", ", connected.Select(v => vertices[v]))}\n");
             foreach (var v in connected)
                 builder.Append(toString(v));
             return builder.ToString();
@@ -56,7 +56,7 @@ namespace GraphLibrary
         public override string ToString()
         {
             if (VertexIndeces == null)
-                throw new Exception("Verteces dictionary was null!!!");
+                throw new Exception("vertices dictionary was null!!!");
                 
             return toString(VertexIndeces[Root]);
         }
