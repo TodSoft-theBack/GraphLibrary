@@ -110,25 +110,24 @@ namespace GraphLibrary
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
             bool[] visited = new bool[Verteces.Count];
-            Stack<int> queue = new Stack<int>();
-            queue.Push(VertexIndeces[root]);
-            var previousVertex = -1;
-            while (queue.Count > 0)
+            visited[VertexIndeces[root]] = true;
+
+            Stack<int> stack = new Stack<int>();
+            foreach (var neighbour in GetNeighbours(VertexIndeces[root]))
+                stack.Push(neighbour);
+            
+            while (stack.Count > 0)
             {
-                var currentVertex = queue.Pop();
+                var currentVertex = stack.Pop();
                 if (!visited[currentVertex])
                 {
                     var adjecentVerteces = GetNeighbours(currentVertex);
 
                     foreach (var vertex in adjecentVerteces)
-                        queue.Push(vertex);
+                        stack.Push(vertex);
 
-                    foreach (var vertex in adjecentVerteces)
-                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
-                    
                     visited[currentVertex] = true;
                 }
-                previousVertex = currentVertex;
             }
             return tree;
         }

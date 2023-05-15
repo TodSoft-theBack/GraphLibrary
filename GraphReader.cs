@@ -17,7 +17,7 @@ namespace GraphLibrary
                 line = Console.ReadLine()?.Trim();
             }
 
-            var bfs = graph.BreadthTraverse('1');
+            var bfs = graph.BreadthTraverse('3');
             var dfs = graph.DepthTraverse('3');
             Console.WriteLine("\nClosing graph reader...");
         }

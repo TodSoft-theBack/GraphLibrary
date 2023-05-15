@@ -65,24 +65,73 @@ namespace GraphLibrary
         {
             return false;
         }
+        
         public List<int> GetNeighbours(int vertex)
             => ListOfNeighbours[vertex].Select(neighbour => neighbour.vertexIndex).ToList();
         public ITree<T> BreadthTraverse(T? root)
         {
+            if (VertexIndeces == null)
+                throw new Exception("Verteces dictionary was null!!!");
             if (Verteces == null)
                 throw new Exception("Verteces collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            return new TreeLP<T>(root, Verteces.Count);
+            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
+            bool[] visited = new bool[Verteces.Count];
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(VertexIndeces[root]);
+            var previousVertex = -1;
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Dequeue();
+                if (!visited[currentVertex])
+                {
+                    var adjecentVerteces = GetNeighbours(currentVertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        queue.Enqueue(vertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
+                    visited[currentVertex] = true;
+                }
+                previousVertex = currentVertex;
+            }
+            return tree;
         }
+
         public ITree<T> DepthTraverse(T? root)
         {
+            if (VertexIndeces == null)
+                throw new Exception("Verteces dictionary was null!!!");
             if (Verteces == null)
                 throw new Exception("Verteces collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
-            return new TreeLP<T>(root, Verteces.Count);
+            ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
+            bool[] visited = new bool[Verteces.Count];
+            visited[VertexIndeces[root]] = true;
+
+            Stack<int> stack = new Stack<int>();
+            foreach (var neighbour in GetNeighbours(VertexIndeces[root]))
+                stack.Push(neighbour);
+            
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                if (!visited[currentVertex])
+                {
+                    var adjecentVerteces = GetNeighbours(currentVertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        stack.Push(vertex);
+
+                    visited[currentVertex] = true;
+                }
+            }
+            return tree;
         }
+
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
             
