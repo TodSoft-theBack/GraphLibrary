@@ -21,7 +21,7 @@ namespace GraphLibrary
         public void AddVertex(T vertex, T parent)
         {
             if (VertexIndeces == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (!Has_Vertex(parent))
                 throw new Exception("Invalid parent index!!!");
             if (Has_Vertex(vertex))
@@ -42,7 +42,7 @@ namespace GraphLibrary
         private string toString(int vertex)
         {
             if (vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             StringBuilder builder = new StringBuilder();
             var connected = GetChildren(vertex);
             if (connected.Count == 0 || connected == null)

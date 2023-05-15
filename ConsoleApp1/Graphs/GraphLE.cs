@@ -198,7 +198,31 @@ namespace GraphLibrary
 
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
-            
+            if (VertexIndices == null)
+                throw new Exception("vertices dictionary was null!!!");
+            if (Vertices == null)
+                throw new Exception("vertices collection was null!!!");
+            if (root == null || !HasVertex(root))
+                throw new Exception("Root must be within the graph!!!");
+            bool[] visited = new bool[Vertices.Count];
+            paths = new TreeLP<T>(root, Vertices.Count);
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(VertexIndices[root]);
+            var previousVertex = -1;
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Dequeue();
+                if (!visited[currentVertex])
+                {
+                    var adjecentvertices = GetNeighbours(currentVertex);
+
+                    foreach (var vertex in adjecentvertices)
+                        queue.Enqueue(vertex);
+
+                    visited[currentVertex] = true;
+                }
+                previousVertex = currentVertex;
+            }
         }
         
         public override string ToString()

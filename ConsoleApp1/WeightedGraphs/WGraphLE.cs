@@ -261,6 +261,7 @@ namespace GraphLibrary
                 {
                     var current = ListOfEdges.Where(edge => edge.vertices == (u , v)).ToList();
                     var currentWeight = int.MaxValue;
+                    
                     if (current.Count != 0)
                         currentWeight = current.FirstOrDefault().weight;
                     
