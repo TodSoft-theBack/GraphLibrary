@@ -64,8 +64,6 @@ namespace GraphLibrary
             {
                 if (edge.vertexFrom == vertex)
                     neighbours.Add(edge.vertexTo);
-                else if (edge.vertexTo == vertex)
-                    neighbours.Add(edge.vertexFrom);
             }
             return neighbours;
         }
@@ -82,28 +80,56 @@ namespace GraphLibrary
             bool[] visited = new bool[Verteces.Count];
             Queue<int> queue = new Queue<int>();
             queue.Enqueue(VertexIndeces[root]);
+            var previousVertex = -1;
             while (queue.Count > 0)
             {
                 var currentVertex = queue.Dequeue();
                 if (!visited[currentVertex])
                 {
                     var adjecentVerteces = GetNeighbours(currentVertex);
+
                     foreach (var vertex in adjecentVerteces)
                         queue.Enqueue(vertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
                     visited[currentVertex] = true;
                 }
-
+                previousVertex = currentVertex;
             }
             return tree;
         }
 
         public ITree<T> DepthTraverse(T? root)
         {
+            if (VertexIndeces == null)
+                throw new Exception("Verteces dictionary was null!!!");
             if (Verteces == null)
                 throw new Exception("Verteces collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Verteces.Count);
+            bool[] visited = new bool[Verteces.Count];
+            Stack<int> queue = new Stack<int>();
+            queue.Push(VertexIndeces[root]);
+            var previousVertex = -1;
+            while (queue.Count > 0)
+            {
+                var currentVertex = queue.Pop();
+                if (!visited[currentVertex])
+                {
+                    var adjecentVerteces = GetNeighbours(currentVertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        queue.Push(vertex);
+
+                    foreach (var vertex in adjecentVerteces)
+                        tree.AddVertex(Verteces[vertex], Verteces[currentVertex]);
+                    
+                    visited[currentVertex] = true;
+                }
+                previousVertex = currentVertex;
+            }
             return tree;
         }
 

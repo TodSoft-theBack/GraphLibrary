@@ -1,6 +1,6 @@
 namespace GraphLibrary
 {
-    public interface IGraphPrototype<T>
+    public interface IGraphPrototype<T> where T : notnull
     {
         public void AddVertex(T vertex);
         public void RemoveVertex(T vertex);
