@@ -1,5 +1,8 @@
 namespace GraphLibrary
 {
+    /// <summary>
+    /// An example class for testing the capabilities of the GraphLibrary
+    /// </summary>
     class GrapthReader
     {
         public void RunReader()

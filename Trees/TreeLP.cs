@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace GraphLibrary
 {
     internal class TreeLP<T> : Tree<T>, ITree<T> where T : notnull
@@ -37,18 +39,28 @@ namespace GraphLibrary
             return connected;
         }
 
+        private string toString(int vertex)
+        {
+            if (Verteces == null)
+                throw new Exception("Verteces collection was null!!!");
+            StringBuilder builder = new StringBuilder();
+            var connected = GetConnections(vertex);
+            if (connected.Count == 0 || connected == null)
+                return $"{Verteces[vertex]} -> \n";
+            builder.Append($"{Verteces[vertex]} -> {string.Join(", ", connected.Select(v => Verteces[v]))}\n");
+            foreach (var v in connected)
+                builder.Append(toString(v));
+            return builder.ToString();
+        }
+
         public override string ToString()
         {
             if (VertexIndeces == null)
                 throw new Exception("Verteces dictionary was null!!!");
-            if (Verteces == null)
-                throw new Exception("Verteces collection was null!!!");
-            string result = string.Empty;
-            var connected =  GetConnections(VertexIndeces[Root]);
-            result += $"{Root} -> {string.Join(", ", connected.Select(conn => Verteces[conn]))}\n";
-            foreach (var vertex in connected)
-                result += $"{Verteces[vertex]} -> {string.Join(", ", GetConnections(vertex).Select(conn => Verteces[conn]))}\n";
-            return result;
+                
+            return toString(VertexIndeces[Root]);
         }
+
+
     }
 }
