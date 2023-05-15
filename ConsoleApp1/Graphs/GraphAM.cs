@@ -1,6 +1,6 @@
 namespace GraphLibrary
 {
-    internal class GraphAM <T>: Graph<T>, IWGraph<T> where T : notnull
+    internal class GraphAM <T>: Graph<T>, IGraph<T> where T : notnull
     {
         int IVertex<T>.Count { get { return Vertices is null ? 0 : Vertices.Count;} }
         List<T>? IVertex<T>.Vertices => Vertices;
@@ -12,23 +12,23 @@ namespace GraphLibrary
             VertexIndices = new Dictionary<T, int>();
         }
 
-        public GraphAM(GraphLN<T> graph) 
+        public GraphAM(IGraph<T> graph) 
         {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
+            if (graph.VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (graph.Vertices == null)
+                throw new Exception("Vertices collection was null!!!");
+            Vertices = new List<T>(graph.Vertices);
+            VertexIndices = new Dictionary<T, int>(graph.VertexIndices);
+
+            AdjacencyMatrix = new int[Vertices.Count, Vertices.Count];
+
+            for (int u = 0; u < Vertices.Count; u++)
+                for (int v = 0; v < Vertices.Count; v++)
+                    if (graph.HasEdge(Vertices[u], Vertices[v]))
+                        AdjacencyMatrix[u,v] = 1;
         }
 
-        public GraphAM(GraphAM<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-        }
-
-        public GraphAM(GraphLE<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-        }
 
         public GraphAM(int[,] adjacencyMatrix)
         {
@@ -53,7 +53,7 @@ namespace GraphLibrary
             this.Add_Vertex(vertex);
         }
 
-        public void AddEdge(T from, T to, int weight)
+        public void AddEdge(T from, T to)
         {
 
         }
@@ -66,11 +66,6 @@ namespace GraphLibrary
         public void RemoveEdge(T from, T to)
         {
 
-        }
-
-        public int GetWeight(T from, T to)
-        {
-            return 0;
         }
 
         public bool HasVertex(T vertex) => this.Has_Vertex(vertex);

@@ -22,6 +22,13 @@ namespace GraphLibrary
             Vertices = new List<T>(graph.Vertices);
             VertexIndices = new Dictionary<T, int>(graph.VertexIndices);
             ListOfNeighbours = new List<List<int>>();
+            for (int vertex = 0; vertex < Vertices.Count; vertex++)
+                ListOfNeighbours.Add(new List<int>());
+
+            for (int u = 0; u < Vertices.Count; u++)
+                for (int v = 0; v < Vertices.Count; v++)
+                    if (graph.HasEdge(Vertices[u], Vertices[v]))
+                        ListOfNeighbours[u].Add(v);
         }
         
         public GraphLN(List<List<int>> listOfNeighbours) : this()
@@ -38,7 +45,7 @@ namespace GraphLibrary
 
         public void AddEdge(T from, T to)
         {
-
+            
         }
 
         public void RemoveVertex(T vertex)
