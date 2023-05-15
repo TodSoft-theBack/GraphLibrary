@@ -62,7 +62,12 @@ namespace GraphLibrary
 
         public bool HasEdge(T from, T to)
         {
-            return false;
+             if (VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+
+            return ListOfNeighbours[VertexIndices[from]].Where(edge => edge == VertexIndices[to]).ToList().Count == 1;
         }
         public List<int> GetNeighbours(int vertex) => ListOfNeighbours[vertex];
         public ITree<T> BreadthTraverse(T? root)

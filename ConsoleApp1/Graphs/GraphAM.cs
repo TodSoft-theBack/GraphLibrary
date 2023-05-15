@@ -18,6 +18,7 @@ namespace GraphLibrary
                 throw new Exception("Vertices dictionary was null!!!");
             if (graph.Vertices == null)
                 throw new Exception("Vertices collection was null!!!");
+                
             Vertices = new List<T>(graph.Vertices);
             VertexIndices = new Dictionary<T, int>(graph.VertexIndices);
 
@@ -72,7 +73,13 @@ namespace GraphLibrary
 
         public bool HasEdge(T from, T to)
         {
-            return false;
+            if (AdjacencyMatrix == null)
+                throw new Exception("The adjacency matrix was null!!!");
+            if (VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+            return AdjacencyMatrix[VertexIndices[from], VertexIndices[to]] != 0;
         }
         public List<int> GetNeighbours(int vertex)
         {
