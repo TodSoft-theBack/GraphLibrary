@@ -35,6 +35,9 @@ namespace GraphLibrary
             foreach (var kvp in distances)
                 Console.WriteLine($"{kvp.Key} -> {kvp.Value}");
 
+            IWGraph<char> graph1 = new WGraphAM<char>(graph);
+            IWGraph<char> graph2 = new WGraphLN<char>(graph);
+
             Console.WriteLine("\nClosing graph reader...");
         }
     }

@@ -1,8 +1,7 @@
 namespace GraphLibrary
 {
-    public interface IGraphPrototype<T> where T : notnull
+    internal interface IGraphPrototype<T> : IVertex<T> where T : notnull
     {
-        public int Count { get; }
         public void AddVertex(T vertex);
         public void RemoveVertex(T vertex);
         public bool HasVertex(T vertex);

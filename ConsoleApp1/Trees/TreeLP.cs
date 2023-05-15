@@ -56,7 +56,7 @@ namespace GraphLibrary
         public override string ToString()
         {
             if (VertexIndeces == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
                 
             return toString(VertexIndeces[Root]);
         }

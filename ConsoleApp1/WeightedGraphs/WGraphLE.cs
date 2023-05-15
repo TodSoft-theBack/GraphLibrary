@@ -2,7 +2,9 @@ namespace GraphLibrary
 {
     internal class WGraphLE<T> : Graph<T>, IWGraph<T> where T : notnull
     {
-        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        int IVertex<T>.Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        List<T>? IVertex<T>.Vertices => Vertices;
+        Dictionary<T, int>? IVertex<T>.VertexIndices => VertexIndices;
         public List<((int vertexFrom, int vertexTo) vertices, int weight)> ListOfEdges { get; set; }
 
         public WGraphLE() 
@@ -12,26 +14,20 @@ namespace GraphLibrary
             ListOfEdges = new List<((int vertexFrom, int vertexTo), int weight)>();
         }
 
-        public WGraphLE(WGraphLN<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
 
-            ListOfEdges = new List<((int vertexFrom, int vertexTo), int weight)>();
-        }
-
-        public WGraphLE(WGraphAM<T> graph) 
+        public WGraphLE(IWGraph<T> graph) 
         {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-            ListOfEdges = new List<((int vertexFrom, int vertexTo), int weight)>();
-        }
-
-        public WGraphLE(WGraphLE<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-            ListOfEdges = new List<((int vertexFrom, int vertexTo), int weight)>(graph.ListOfEdges);
+            if (graph.VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (graph.Vertices == null)
+                throw new Exception("Vertices collection was null!!!");
+            Vertices = new List<T>(graph.Vertices);
+            VertexIndices = new Dictionary<T, int>(graph.VertexIndices);
+            ListOfEdges = new List<((int vertexFrom, int vertexTo) vertices, int weight)>();
+            for (int u = 0; u < Vertices.Count; u++)
+                for (int v = 0; v < Vertices.Count; v++)
+                    if (HasEdge(Vertices[u], Vertices[v]))
+                        ListOfEdges.Add(((u, v), graph.GetWeight(Vertices[u], Vertices[v])));
         }
 
         public WGraphLE(List<((int vertexFrom, int vertexTo), int weight)> listOfEdges)
@@ -46,7 +42,7 @@ namespace GraphLibrary
         public void AddEdge(T from, T to, int weight)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
 
             if (!this.Has_Vertex(from))
                 Add_Vertex(from);
@@ -63,10 +59,21 @@ namespace GraphLibrary
         public void RemoveEdge(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             var desiredEdge = (VertexIndices[from], VertexIndices[to]);
             int index = ListOfEdges.FindIndex(edge => edge.vertices == desiredEdge);
+            if (index != -1)
+                ListOfEdges.RemoveAt(index);       
+        }
 
+        public int GetWeight(T from, T to)
+        {
+            if (VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (!HasVertex(from) || !HasVertex(to))
+                throw new Exception("Source and destination must be within the graph!!!");
+            var edge = ListOfEdges.Where(edge => edge.vertices == (VertexIndices[from], VertexIndices[to])).ToList();
+            return edge.Count == 1 ? edge.FirstOrDefault().weight : 0;
         }
 
         public bool HasVertex(T vertex) => this.Has_Vertex(vertex);
@@ -74,7 +81,7 @@ namespace GraphLibrary
         public bool HasEdge(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             var desiredEdge = (VertexIndices[from], VertexIndices[to]);
             int index = ListOfEdges.FindIndex(edge => edge.vertices == desiredEdge);
             return index != -1;
@@ -96,9 +103,9 @@ namespace GraphLibrary
         public ITree<T> BreadthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -128,9 +135,9 @@ namespace GraphLibrary
         public ITree<T> DepthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -163,9 +170,9 @@ namespace GraphLibrary
         public bool BreadthSearch(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
             bool[] visited = new bool[Vertices.Count];
@@ -196,9 +203,9 @@ namespace GraphLibrary
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
@@ -224,7 +231,7 @@ namespace GraphLibrary
         private int minDistance(Dictionary<T, int> weights, bool[] visited)
         {
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
 
             int min = int.MaxValue, min_index = -1;
             for (int v = 0; v < Vertices.Count; v++)
@@ -240,7 +247,7 @@ namespace GraphLibrary
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             weigths = new Dictionary<T, int>();
             paths = new TreeLP<T>(root, Vertices.Count);
             bool[] visited = new bool[Vertices.Count];

@@ -2,7 +2,9 @@ namespace GraphLibrary
 {
     internal class GraphLE<T> : Graph<T>, IGraph<T> where T : notnull
     {
-        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        int IVertex<T>.Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        List<T>? IVertex<T>.Vertices => Vertices;
+        Dictionary<T, int>? IVertex<T>.VertexIndices => VertexIndices;
         public List<(int vertexFrom, int vertexTo)> ListOfEdges { get; set; }
 
         public GraphLE() 
@@ -45,7 +47,7 @@ namespace GraphLibrary
         public void AddEdge(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
 
             if (!this.Has_Vertex(from))
                 Add_Vertex(from);
@@ -59,7 +61,7 @@ namespace GraphLibrary
         public void RemoveEdge(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             var desiredEdge = (VertexIndices[from], VertexIndices[to]);
             int index = ListOfEdges.FindIndex(edge => edge == desiredEdge);
 
@@ -70,7 +72,7 @@ namespace GraphLibrary
         public bool HasEdge(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             var desiredEdge = (VertexIndices[from], VertexIndices[to]);
             int index = ListOfEdges.FindIndex(edge => edge == desiredEdge);
             return index != -1;
@@ -120,9 +122,9 @@ namespace GraphLibrary
         public ITree<T> DepthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -155,9 +157,9 @@ namespace GraphLibrary
         public bool BreadthSearch(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
             bool[] visited = new bool[Vertices.Count];
@@ -186,9 +188,9 @@ namespace GraphLibrary
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
                 if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
@@ -214,9 +216,9 @@ namespace GraphLibrary
         public void ShortestDistance(T root, ref Dictionary<T, int> weigths, ref ITree<T> paths)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             paths = new TreeLP<T>(root, Vertices.Count);

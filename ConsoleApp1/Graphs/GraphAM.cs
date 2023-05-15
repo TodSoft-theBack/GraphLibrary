@@ -2,7 +2,9 @@ namespace GraphLibrary
 {
     internal class GraphAM <T>: Graph<T>, IWGraph<T> where T : notnull
     {
-        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        int IVertex<T>.Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        List<T>? IVertex<T>.Vertices => Vertices;
+        Dictionary<T, int>? IVertex<T>.VertexIndices => VertexIndices;
         protected int[,]? AdjacencyMatrix { get; set; }
         public GraphAM() 
         {
@@ -66,6 +68,11 @@ namespace GraphLibrary
 
         }
 
+        public int GetWeight(T from, T to)
+        {
+            return 0;
+        }
+
         public bool HasVertex(T vertex) => this.Has_Vertex(vertex);
 
         public bool HasEdge(T from, T to)
@@ -75,7 +82,7 @@ namespace GraphLibrary
         public List<int> GetNeighbours(int vertex)
         {
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (AdjacencyMatrix == null)
                 throw new Exception("The adjacency matrix was null!!!");
             var neighbours = new List<int>();
@@ -88,9 +95,9 @@ namespace GraphLibrary
         public ITree<T> BreadthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -120,9 +127,9 @@ namespace GraphLibrary
         public ITree<T> DepthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -155,9 +162,9 @@ namespace GraphLibrary
 public bool BreadthSearch(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
             bool[] visited = new bool[Vertices.Count];
@@ -188,9 +195,9 @@ public bool BreadthSearch(T from, T to)
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
                 if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
@@ -220,7 +227,17 @@ public bool BreadthSearch(T from, T to)
 
         public override string ToString()
         {
-            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tWeighted adjacency matrix:\n";
+            string result = $"{new string('-', 10)}Oriented graph{new string('-', 10)}\n\tAdjacency matrix:\n";
+            if (AdjacencyMatrix == null)
+                throw new Exception("The adjacency matrix was null!!!");
+            if (Vertices == null)
+                throw new Exception("Vertices collection was null!!!");
+            for (int u = 0; u < Vertices.Count; u++)
+            {
+                for (int v = 0; v < Vertices.Count; v++)
+                    result +=$" {AdjacencyMatrix[u, v]} " ;
+                result += "\n";
+            }
             return result;
         }
     }

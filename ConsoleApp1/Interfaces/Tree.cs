@@ -7,11 +7,11 @@ namespace GraphLibrary
         protected void Add_Vertex(T vertex)
         {
             if (VertexIndeces == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (VertexIndeces.ContainsKey(vertex))
                 return;
             if (vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (vertex == null)
                 throw new Exception("Vertex cannot be null!!!");
             vertices.Add(vertex);
@@ -20,11 +20,11 @@ namespace GraphLibrary
         protected void Remove_Vertex(T vertex)
         {
             if (VertexIndeces == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (VertexIndeces.ContainsKey(vertex))
                 return;
             if (vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (vertex == null)
                 throw new Exception("Vertex cannot be null!!!");
             vertices.Remove(vertex);
@@ -36,7 +36,7 @@ namespace GraphLibrary
             if (vertex == null)
                 throw new Exception("Vertex cannot be null!!!");
             if (VertexIndeces == null)
-                throw new Exception("vertices dictionary was empty!!!");
+                throw new Exception("Vertices dictionary was empty!!!");
             return VertexIndeces.ContainsKey(vertex);
         }
 

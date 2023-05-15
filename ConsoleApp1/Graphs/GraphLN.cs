@@ -1,8 +1,10 @@
 namespace GraphLibrary
 {
-    internal class GraphLN<T> : Graph<T>, IWGraph<T> where T : notnull
+    internal class GraphLN<T> : Graph<T>, IGraph<T> where T : notnull
     {
-        public int Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        int IVertex<T>.Count { get { return Vertices is null ? 0 : Vertices.Count;} }
+        List<T>? IVertex<T>.Vertices => Vertices;
+        Dictionary<T, int>? IVertex<T>.VertexIndices => VertexIndices;
         protected List<List<int>> ListOfNeighbours { get; set; }
         public GraphLN() 
         {
@@ -11,27 +13,16 @@ namespace GraphLibrary
             ListOfNeighbours = new List<List<int>>();
         }
 
-        public GraphLN(GraphLN<T> graph) 
+        public GraphLN(IGraph<T> graph) 
         {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
+            if (graph.VertexIndices == null)
+                throw new Exception("Vertices dictionary was null!!!");
+            if (graph.Vertices == null)
+                throw new Exception("Vertices collection was null!!!");
+            Vertices = new List<T>(graph.Vertices);
+            VertexIndices = new Dictionary<T, int>(graph.VertexIndices);
             ListOfNeighbours = new List<List<int>>();
         }
-
-        public GraphLN(GraphAM<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<int>>();
-        }
-
-        public GraphLN(GraphLE<T> graph) 
-        {
-            Vertices = new List<T>();
-            VertexIndices = new Dictionary<T, int>();
-            ListOfNeighbours = new List<List<int>>();
-        }
-
         
         public GraphLN(List<List<int>> listOfNeighbours) : this()
         {
@@ -45,7 +36,7 @@ namespace GraphLibrary
         
         public void AddVertex(T vertex) => this.Add_Vertex(vertex);
 
-        public void AddEdge(T from, T to, int weight)
+        public void AddEdge(T from, T to)
         {
 
         }
@@ -70,9 +61,9 @@ namespace GraphLibrary
         public ITree<T> BreadthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -102,9 +93,9 @@ namespace GraphLibrary
         public ITree<T> DepthTraverse(T? root)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (root == null)
                 throw new Exception("Root cannot be null!!!");
             ITree<T> tree = new TreeLP<T>(root, Vertices.Count);
@@ -137,9 +128,9 @@ namespace GraphLibrary
         public bool BreadthSearch(T from, T to)
         {
             if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
             bool[] visited = new bool[Vertices.Count];
@@ -170,9 +161,9 @@ namespace GraphLibrary
             if (!HasVertex(from) || !HasVertex(to))
                 throw new Exception("Source and destination must be within the graph!!!");
                 if (VertexIndices == null)
-                throw new Exception("vertices dictionary was null!!!");
+                throw new Exception("Vertices dictionary was null!!!");
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             bool[] visited = new bool[Vertices.Count];
 
             Stack<int> stack = new Stack<int>();
@@ -202,7 +193,14 @@ namespace GraphLibrary
 
         public override string ToString()
         {
-            string result = $"{new string('-', 10)}Weighted oriented graph{new string('-', 10)}\n\tWeighted list of neighbours:\n";
+            if (Vertices == null)
+                throw new Exception("Vertices collection was null!!!");
+            string result = $"{new string('-', 10)}Oriented graph{new string('-', 10)}\n\tList of neighbours:\n";
+            for (int u = 0; u < Vertices.Count; u++)
+            {
+                result += $"{Vertices[u]} -> {string.Join(", ", ListOfNeighbours[u].Select(edge => Vertices[edge]))}"; 
+                result += "\n";
+            }
             return result;
         }
     }

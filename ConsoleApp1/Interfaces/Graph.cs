@@ -1,9 +1,9 @@
 namespace GraphLibrary
 {
-    internal abstract class Graph<T> where T : notnull
+    internal abstract class Graph<T>  where T : notnull
     {
-        protected List<T>? Vertices {get; set;}
-        protected Dictionary<T, int>? VertexIndices {get; set;}
+        internal List<T>? Vertices;
+        internal Dictionary<T, int>? VertexIndices;
 
         public void Add_Vertex(T vertex)
         {
@@ -25,7 +25,7 @@ namespace GraphLibrary
             if (VertexIndices.ContainsKey(vertex))
                 return;
             if (Vertices == null)
-                throw new Exception("vertices collection was null!!!");
+                throw new Exception("Vertices collection was null!!!");
             if (vertex == null)
                 throw new Exception("Vertex cannot be null!!!");
             Vertices.Remove(vertex);
