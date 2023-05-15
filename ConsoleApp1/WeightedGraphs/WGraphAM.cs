@@ -267,7 +267,10 @@ namespace GraphLibrary
                         continue;
 
                     if(weigths[Vertices[u]] + AdjacencyMatrix[u, v]  < weigths[Vertices[v]])
+                    {
+                        paths.AddVertex(Vertices[v], Vertices[u]);
                         weigths[Vertices[v]] = weigths[Vertices[u]] + AdjacencyMatrix[u, v] ;
+                    }
                 }
             }
         }

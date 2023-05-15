@@ -272,7 +272,10 @@ namespace GraphLibrary
                         continue;
 
                     if(weigths[Vertices[u]] + currentWeight < weigths[Vertices[v]])
+                    {
+                        paths.AddVertex(Vertices[v], Vertices[u]);
                         weigths[Vertices[v]] = weigths[Vertices[u]] + currentWeight;
+                    }
                 }
             }
         }
